@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: apex-sports-club
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 80

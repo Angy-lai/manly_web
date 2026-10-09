@@ -1,0 +1,14 @@
+# Environment and local databases
+.env
+data/*.sqlite
+data/*.db
+*.log
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
