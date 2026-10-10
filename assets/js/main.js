@@ -1,474 +1,646 @@
 /**
- * Main JavaScript Application - Apex Sports Club
- * Course: ISE 2102: Web Technologies
+ * Apex Sports Club — Main JavaScript Module
+ * ISE 2102: Web Technologies
  * 
- * Features demonstrated:
- * - Variables (const, let) and strict equality operators
- * - Objects, Arrays, and iteration loops (forEach, filter, find)
- * - Event Listeners (click, submit, input, keydown, DOMContentLoaded)
- * - DOM Traversal & Manipulation
- * - Mobile Navigation Menu Toggle & ARIA states
- * - Interactive Multi-Sport Event Filtering & Empty States
- * - Interactive Photo Gallery Filtering
- * - Fullscreen Lightbox with Keyboard Navigation (Escape, Arrow keys)
- * - Comprehensive Client-side Form Validation & Accessible Alerts
- * - Dynamic Copyright Year Auto-Updater
+ * Demonstrates:
+ * - Arrays and Objects (data models)
+ * - Events (click, submit, input, keydown, resize)
+ * - DOM manipulation & filtering
+ * - Form validation (client-side)
+ * - Interactive Lightbox Modal
  */
 
-'use strict';
+// ==========================================
+// 1. DATA MODELS (Arrays & Objects)
+// ==========================================
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Dynamic Copyright Year
-    initCopyrightYear();
+const SPORTS_DATA = [
+  {
+    id: "football",
+    name: "Football",
+    tagline: "Play together. Compete together.",
+    description: "Weekly friendly matches, tactical training, and campus league tournaments for all skill levels.",
+    image: "assets/sports.jpeg",
+    icon: "⚽",
+    badge: "Most Popular",
+    category: "Team Sports"
+  },
+  {
+    id: "basketball",
+    name: "Basketball",
+    tagline: "Find your rhythm on the court.",
+    description: "Fast-paced pick-up games, shooting drills, and 3v3 weekend showdowns on indoor and outdoor courts.",
+    image: "assets/pic_of_balls.jpeg",
+    icon: "🏀",
+    badge: "Fast Paced",
+    category: "Court Sports"
+  },
+  {
+    id: "fitness",
+    name: "Gym & Fitness",
+    tagline: "Build strength one session at a time.",
+    description: "Structured conditioning circuits, functional strength workshops, and high-energy group fitness classes.",
+    image: "assets/girl_holding_ropes.jpeg",
+    icon: "🏋️",
+    badge: "All Levels",
+    category: "Conditioning"
+  },
+  {
+    id: "volleyball",
+    name: "Volleyball",
+    tagline: "Teamwork above the net.",
+    description: "Spike, set, and serve in mixed recreational games and faculty challenge matches on our sand and indoor courts.",
+    image: "assets/volley.jpeg",
+    icon: "🏐",
+    badge: "Social & Fun",
+    category: "Court Sports"
+  },
+  {
+    id: "running",
+    name: "Running & Athletics",
+    tagline: "Set a goal. Find your pace.",
+    description: "Weekly sunrise distance runs, interval track training, 5K campus challenges, and sprint technique sessions.",
+    image: "assets/sports.jpeg",
+    icon: "🏃",
+    badge: "Cardio & Stamina",
+    category: "Endurance"
+  },
+  {
+    id: "social",
+    name: "Social Sports",
+    tagline: "Move, connect and unwind.",
+    description: "Casual multi-sport tournaments, sports trivia, outdoor hikes, and interfaculty fun days.",
+    image: "assets/pic_of_balls.jpeg",
+    icon: "🎉",
+    badge: "Community",
+    category: "Social"
+  }
+];
 
-    // 2. Mobile Navigation Toggle
-    initMobileNav();
+const EVENTS_DATA = [
+  {
+    id: 1,
+    title: "Community Football Match",
+    sport: "Football",
+    date: "Saturday, 24 Oct",
+    time: "10:00 AM - 12:30 PM",
+    venue: "Main Campus Turf Pitch 1",
+    level: "All Abilities Welcome",
+    description: "Bring your boots for an open 7v7 friendly match. Great way to meet members and warm up for the semester league."
+  },
+  {
+    id: 2,
+    title: "3v3 Basketball Tournament",
+    sport: "Basketball",
+    date: "Wednesday, 28 Oct",
+    time: "4:30 PM - 7:00 PM",
+    venue: "Indoor Sports Complex (Court B)",
+    level: "Intermediate & Advanced",
+    description: "Fast half-court matches with running clocks. Enter as a squad of three or join the free-agent pool on arrival."
+  },
+  {
+    id: 3,
+    title: "Sunset 5K Campus Run",
+    sport: "Running",
+    date: "Friday, 30 Oct",
+    time: "5:30 PM - 6:45 PM",
+    venue: "Student Plaza (Start / Finish)",
+    level: "All Paces (Walkers to Sprinters)",
+    description: "A scenic loop around campus perimeter paths led by student pacers. Free hydration and fruit at the finish line."
+  },
+  {
+    id: 4,
+    title: "Functional Strength & Core Circuit",
+    sport: "Fitness",
+    date: "Monday, 2 Nov",
+    time: "5:00 PM - 6:15 PM",
+    venue: "Fitness Suite / Multi-Gym",
+    level: "Beginner Friendly",
+    description: "Learn safe lifting techniques, kettlebell flows, and bodyweight core routines guided by peer fitness coaches."
+  },
+  {
+    id: 5,
+    title: "Volleyball Spike & Serve Clinic",
+    sport: "Volleyball",
+    date: "Thursday, 5 Nov",
+    time: "4:00 PM - 6:00 PM",
+    venue: "Outdoor Sand Courts",
+    level: "Open to Everyone",
+    description: "Sharpen your jump serves, setting consistency, and defensive positioning with fun structured scrimmages."
+  }
+];
 
-    // 3. Activities / Events Filtering
-    initActivitiesFilter();
+const COMMITTEE_DATA = [
+  {
+    name: "Tariq Mensah",
+    role: "President",
+    dept: "Faculty of Engineering",
+    icon: "👑",
+    bio: "Passionate about building community through grassroots university sport."
+  },
+  {
+    name: "Elena Rostova",
+    role: "Vice President",
+    dept: "Faculty of Health Sciences",
+    icon: "⚡",
+    bio: "Advocating for health equity, female participation, and wellness habits on campus."
+  },
+  {
+    name: "Marcus Vance",
+    role: "Sports Coordinator",
+    dept: "School of Business",
+    icon: "📋",
+    bio: "Organises weekly fixtures, officiating, pitch reservations, and tournament brackets."
+  },
+  {
+    name: "Amina Al-Mansoor",
+    role: "Community & Media Lead",
+    dept: "Department of Computer Science",
+    icon: "📣",
+    bio: "Manages social channels, club branding, member communications, and student events."
+  }
+];
 
-    // 4. Gallery Filtering & Accessible Lightbox
-    initGalleryAndLightbox();
+const GALLERY_DATA = [
+  {
+    id: 1,
+    title: "Championship Final Kick-Off",
+    category: "Football",
+    desc: "Intense campus cup finals under floodlights at the main stadium.",
+    image: "assets/sports.jpeg"
+  },
+  {
+    id: 2,
+    title: "Court Warm-Up & Ball Drills",
+    category: "Basketball",
+    desc: "Pre-match shootarounds and ball handling routines before the faculty league game.",
+    image: "assets/pic_of_balls.jpeg"
+  },
+  {
+    id: 3,
+    title: "Battle Ropes Conditioning",
+    category: "Fitness",
+    desc: "High intensity interval strength circuit testing endurance and power.",
+    image: "assets/girl_holding_ropes.jpeg"
+  },
+  {
+    id: 4,
+    title: "Match Point at the Net",
+    category: "Volleyball",
+    desc: "Decisive spike block during the mixed interfaculty volleyball tournament.",
+    image: "assets/volley.jpeg"
+  },
+  {
+    id: 5,
+    title: "Sunset Pace Group 5K",
+    category: "Running",
+    desc: "Members winding down the week with an energetic campus evening jog.",
+    image: "assets/sports.jpeg"
+  },
+  {
+    id: 6,
+    title: "Multi-Sport Equipment Pack",
+    category: "Social",
+    desc: "Everything ready for Saturday morning open student recreation day.",
+    image: "assets/pic_of_balls.jpeg"
+  }
+];
 
-    // 5. Form Validation for Join Us / Contact
-    initFormValidation();
+// ==========================================
+// 2. DOM INITIALISATION & RENDERING
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", () => {
+  initCommon();
+  renderSportsGrids();
+  renderEvents();
+  renderCommittee();
+  renderGallery();
+  initFormValidation();
+  checkUrlParams();
 });
 
 /**
- * Update footer copyright year dynamically
+ * Common site utilities (Year, Mobile Menu)
  */
-function initCopyrightYear() {
-    const yearSpan = document.getElementById('copyright-year');
-    if (yearSpan) {
-        const currentYear = new Date().getFullYear();
-        yearSpan.textContent = currentYear;
-    }
+function initCommon() {
+  // Dynamic footer year
+  const yearEl = document.getElementById("year");
+  if (yearEl) {
+    yearEl.textContent = new Date().getFullYear();
+  }
+
+  // Mobile menu toggle
+  const burger = document.getElementById("burger");
+  const mobileNav = document.getElementById("mobile-nav");
+  if (burger && mobileNav) {
+    burger.addEventListener("click", () => {
+      const isOpen = burger.classList.toggle("open");
+      mobileNav.classList.toggle("open");
+      burger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      mobileNav.setAttribute("aria-hidden", isOpen ? "false" : "true");
+    });
+
+    // Close on escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && burger.classList.contains("open")) {
+        burger.classList.remove("open");
+        mobileNav.classList.remove("open");
+        burger.setAttribute("aria-expanded", "false");
+        mobileNav.setAttribute("aria-hidden", "true");
+      }
+    });
+  }
 }
 
 /**
- * Mobile Navigation Menu Handler
+ * Render Sports Cards on Home and Activities pages
  */
-function initMobileNav() {
-    const toggleBtn = document.getElementById('mobile-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
+function renderSportsGrids() {
+  const homeGrid = document.getElementById("sports-grid");
+  const actGrid = document.getElementById("activities-sports-grid");
 
-    if (!toggleBtn || !mobileMenu) return;
+  const markup = SPORTS_DATA.map(sport => `
+    <article class="sport-card" id="${sport.id}">
+      <div class="sport-card-img">
+        <img src="${sport.image}" alt="${sport.name} at Apex Sports Club" loading="lazy" />
+        <span class="sport-badge">${sport.badge}</span>
+      </div>
+      <div class="sport-body">
+        <div class="sport-head">
+          <span class="sport-icon">${sport.icon}</span>
+          <h3>${sport.name}</h3>
+        </div>
+        <div class="sport-tagline">${sport.tagline}</div>
+        <p>${sport.description}</p>
+        <a href="join.html?sport=${encodeURIComponent(sport.name)}" class="sport-link">
+          Join ${sport.name} &rarr;
+        </a>
+      </div>
+    </article>
+  `).join("");
 
-    toggleBtn.addEventListener('click', () => {
-        const isOpen = mobileMenu.classList.contains('open');
-        if (isOpen) {
-            mobileMenu.classList.remove('open');
-            toggleBtn.classList.remove('active');
-            toggleBtn.setAttribute('aria-expanded', 'false');
-            mobileMenu.setAttribute('aria-hidden', 'true');
-        } else {
-            mobileMenu.classList.add('open');
-            toggleBtn.classList.add('active');
-            toggleBtn.setAttribute('aria-expanded', 'true');
-            mobileMenu.setAttribute('aria-hidden', 'false');
-        }
-    });
-
-    // Close mobile menu when clicking outside or clicking any link inside
-    const mobileLinks = mobileMenu.querySelectorAll('a');
-    mobileLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            mobileMenu.classList.remove('open');
-            toggleBtn.classList.remove('active');
-            toggleBtn.setAttribute('aria-expanded', 'false');
-            mobileMenu.setAttribute('aria-hidden', 'true');
-        });
-    });
+  if (homeGrid) homeGrid.innerHTML = markup;
+  if (actGrid) actGrid.innerHTML = markup;
 }
 
 /**
- * Filter activities and events by sport category
+ * Render and filter Events
  */
-function initActivitiesFilter() {
-    const filterButtons = document.querySelectorAll('.filter-bar .filter-btn:not(.gallery-filter-btn)');
-    const eventCards = document.querySelectorAll('#events-container .event-card');
-    const emptyState = document.getElementById('events-empty-state');
-    const resetBtn = document.getElementById('reset-filter-btn');
+function renderEvents() {
+  const homeEvents = document.getElementById("home-events-grid");
+  const allEventsGrid = document.getElementById("events-grid");
+  const filterBar = document.getElementById("filter-bar");
+  const emptyState = document.getElementById("events-empty");
 
-    if (!filterButtons.length || !eventCards.length) return;
+  // Home page: top 3 events
+  if (homeEvents) {
+    homeEvents.innerHTML = EVENTS_DATA.slice(0, 3).map(ev => createEventCard(ev)).join("");
+  }
 
-    // Check for URL query param, e.g. ?filter=football
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialCategory = urlParams.get('category') || urlParams.get('filter');
+  // Activities page: full interactive filter
+  if (allEventsGrid && filterBar) {
+    const categories = ["All", ...new Set(EVENTS_DATA.map(e => e.sport))];
+    
+    // Render filter buttons
+    filterBar.innerHTML = categories.map((cat, idx) => `
+      <button class="filter-btn ${idx === 0 ? 'active' : ''}" data-filter="${cat}">
+        ${cat}
+      </button>
+    `).join("");
 
-    // Filter logic function
-    function applyFilter(targetCategory) {
-        let matchCount = 0;
-        const normalizedTarget = targetCategory.toLowerCase();
+    // Initial render
+    renderFilteredEvents("All");
 
-        eventCards.forEach(card => {
-            const cardCategory = (card.getAttribute('data-category') || '').toLowerCase();
-            const shouldShow = (normalizedTarget === 'all' || cardCategory.includes(normalizedTarget));
+    // Filter event listener
+    filterBar.addEventListener("click", (e) => {
+      const btn = e.target.closest(".filter-btn");
+      if (!btn) return;
 
-            if (shouldShow) {
-                card.style.display = 'flex';
-                matchCount++;
-            } else {
-                card.style.display = 'none';
-            }
-        });
+      filterBar.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
 
-        // Update active class on filter buttons
-        filterButtons.forEach(btn => {
-            const btnFilter = btn.getAttribute('data-filter').toLowerCase();
-            const isMatch = (btnFilter === normalizedTarget);
-            btn.classList.toggle('active', isMatch);
-            btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
-        });
-
-        // Handle empty state visibility
-        if (emptyState) {
-            emptyState.style.display = (matchCount === 0) ? 'block' : 'none';
-        }
-    }
-
-    // Attach click listeners to filter buttons
-    filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const category = button.getAttribute('data-filter');
-            applyFilter(category);
-        });
+      const selected = btn.getAttribute("data-filter");
+      renderFilteredEvents(selected);
     });
 
-    // Reset button inside empty state
+    const resetBtn = document.getElementById("reset-events-btn");
     if (resetBtn) {
-        resetBtn.addEventListener('click', () => {
-            applyFilter('all');
-        });
+      resetBtn.addEventListener("click", () => {
+        const allBtn = filterBar.querySelector('[data-filter="All"]');
+        if (allBtn) allBtn.click();
+      });
     }
 
-    // Auto-apply if parameter was passed
-    if (initialCategory) {
-        applyFilter(initialCategory);
+    function renderFilteredEvents(cat) {
+      const filtered = cat === "All" ? EVENTS_DATA : EVENTS_DATA.filter(e => e.sport === cat);
+      if (filtered.length === 0) {
+        allEventsGrid.innerHTML = "";
+        if (emptyState) emptyState.style.display = "block";
+      } else {
+        if (emptyState) emptyState.style.display = "none";
+        allEventsGrid.innerHTML = filtered.map(ev => createEventCard(ev)).join("");
+      }
     }
+  }
+
+  function createEventCard(ev) {
+    return `
+      <article class="event-card">
+        <div class="event-top">
+          <span class="event-badge">${ev.sport}</span>
+          <span class="event-sample">Sample Date</span>
+        </div>
+        <h3>${ev.title}</h3>
+        <ul class="event-meta">
+          <li><span>📅</span> <strong>${ev.date}</strong> &bull; ${ev.time}</li>
+          <li><span>📍</span> ${ev.venue}</li>
+          <li><span>🎯</span> ${ev.level}</li>
+        </ul>
+        <p class="event-desc">${ev.description}</p>
+        <a href="join.html?purpose=event&sport=${encodeURIComponent(ev.sport)}" class="btn btn-outline btn-sm">
+          Register for Session
+        </a>
+      </article>
+    `;
+  }
 }
 
 /**
- * Gallery Image Filtering & Lightbox Modal System
+ * Render Committee on About page
  */
-function initGalleryAndLightbox() {
-    const galleryItems = document.querySelectorAll('#gallery-container .gallery-item');
-    const galleryFilters = document.querySelectorAll('.gallery-filter-btn');
-    const emptyState = document.getElementById('gallery-empty-state');
-    const resetBtn = document.getElementById('reset-gallery-filter-btn');
+function renderCommittee() {
+  const grid = document.getElementById("committee-grid");
+  if (!grid) return;
 
-    const modal = document.getElementById('lightbox-modal');
-    const modalImg = document.getElementById('lightbox-img');
-    const modalTitle = document.getElementById('lightbox-title');
-    const modalCategory = document.getElementById('lightbox-category');
-    const modalDesc = document.getElementById('lightbox-desc');
-    const closeBtn = document.getElementById('lightbox-close');
-    const prevBtn = document.getElementById('lightbox-prev');
-    const nextBtn = document.getElementById('lightbox-next');
+  grid.innerHTML = COMMITTEE_DATA.map(member => `
+    <article class="committee-card">
+      <div class="committee-avatar" aria-hidden="true">${member.icon}</div>
+      <div class="committee-role">${member.role}</div>
+      <h3>${member.name}</h3>
+      <p style="color:var(--green-soft); font-weight:600; margin-bottom:6px;">${member.dept}</p>
+      <p>${member.bio}</p>
+    </article>
+  `).join("");
+}
 
-    if (!galleryItems.length || !modal) return;
+/**
+ * Render Gallery + Interactive Lightbox Modal
+ */
+let currentLightboxIdx = 0;
+let currentGalleryList = [...GALLERY_DATA];
 
-    // Use embedded gallery items array or fallback
-    const itemsData = window.APEX_GALLERY_DATA || [];
-    let currentFilteredIndices = [];
-    let currentActiveIndex = 0;
+function renderGallery() {
+  const galleryGrid = document.getElementById("gallery-grid");
+  const filterBar = document.getElementById("gallery-filter-bar");
+  const emptyState = document.getElementById("gallery-empty");
 
-    // Helper: update list of currently visible gallery card indexes
-    function refreshVisibleIndices() {
-        currentFilteredIndices = [];
-        galleryItems.forEach((item, index) => {
-            if (item.style.display !== 'none') {
-                currentFilteredIndices.push(index);
-            }
-        });
-    }
-    refreshVisibleIndices();
+  if (!galleryGrid) return;
 
-    // Gallery Category Filter
-    function filterGallery(category) {
-        const normalized = category.toLowerCase();
-        let visibleCount = 0;
+  if (filterBar) {
+    const cats = ["All", ...new Set(GALLERY_DATA.map(g => g.category))];
+    filterBar.innerHTML = cats.map((c, i) => `
+      <button class="filter-btn ${i === 0 ? 'active' : ''}" data-cat="${c}">${c}</button>
+    `).join("");
 
-        galleryItems.forEach(item => {
-            const itemCat = (item.getAttribute('data-category') || '').toLowerCase();
-            const matches = (normalized === 'all' || itemCat === normalized);
+    filterBar.addEventListener("click", (e) => {
+      const btn = e.target.closest(".filter-btn");
+      if (!btn) return;
+      filterBar.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
 
-            if (matches) {
-                item.style.display = 'block';
-                visibleCount++;
-            } else {
-                item.style.display = 'none';
-            }
-        });
-
-        galleryFilters.forEach(btn => {
-            const btnFilter = btn.getAttribute('data-filter').toLowerCase();
-            const isActive = (btnFilter === normalized);
-            btn.classList.toggle('active', isActive);
-            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
-        });
-
-        if (emptyState) {
-            emptyState.style.display = (visibleCount === 0) ? 'block' : 'none';
-        }
-
-        refreshVisibleIndices();
-    }
-
-    galleryFilters.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const filterCat = btn.getAttribute('data-filter');
-            filterGallery(filterCat);
-        });
+      const cat = btn.getAttribute("data-cat");
+      currentGalleryList = cat === "All" ? GALLERY_DATA : GALLERY_DATA.filter(g => g.category === cat);
+      drawGallery();
     });
 
+    const resetBtn = document.getElementById("reset-gallery-btn");
     if (resetBtn) {
-        resetBtn.addEventListener('click', () => filterGallery('all'));
+      resetBtn.addEventListener("click", () => {
+        const allBtn = filterBar.querySelector('[data-cat="All"]');
+        if (allBtn) allBtn.click();
+      });
     }
+  }
 
-    // Lightbox modal opener
-    function openLightbox(dataIndex) {
-        const itemObj = itemsData[dataIndex];
-        if (!itemObj) return;
-
-        currentActiveIndex = currentFilteredIndices.indexOf(dataIndex);
-        if (currentActiveIndex === -1) currentActiveIndex = 0;
-
-        modalImg.src = itemObj.src;
-        modalImg.alt = itemObj.alt;
-        modalTitle.textContent = itemObj.title;
-        modalCategory.textContent = itemObj.category;
-        modalDesc.textContent = itemObj.caption;
-
-        modal.style.display = 'flex';
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent background scroll
-        closeBtn.focus();
+  function drawGallery() {
+    if (currentGalleryList.length === 0) {
+      galleryGrid.innerHTML = "";
+      if (emptyState) emptyState.style.display = "block";
+    } else {
+      if (emptyState) emptyState.style.display = "none";
+      galleryGrid.innerHTML = currentGalleryList.map((item, index) => `
+        <div class="gallery-item" data-idx="${index}" tabindex="0" role="button" aria-label="View photo: ${item.title}">
+          <img src="${item.image}" alt="${item.title}" loading="lazy" />
+          <div class="gallery-overlay">
+            <span class="gallery-cat">${item.category}</span>
+            <div class="gallery-name">${item.title}</div>
+          </div>
+        </div>
+      `).join("");
     }
+  }
 
-    function closeLightbox() {
-        modal.classList.remove('active');
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
+  drawGallery();
+
+  // Attach Lightbox event listeners
+  galleryGrid.addEventListener("click", (e) => {
+    const item = e.target.closest(".gallery-item");
+    if (!item) return;
+    const idx = parseInt(item.getAttribute("data-idx"), 10);
+    openLightbox(idx);
+  });
+
+  galleryGrid.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      const item = e.target.closest(".gallery-item");
+      if (item) {
+        e.preventDefault();
+        const idx = parseInt(item.getAttribute("data-idx"), 10);
+        openLightbox(idx);
+      }
     }
+  });
 
-    function showNextImage() {
-        if (!currentFilteredIndices.length) return;
-        currentActiveIndex = (currentActiveIndex + 1) % currentFilteredIndices.length;
-        const targetIndex = currentFilteredIndices[currentActiveIndex];
-        openLightbox(targetIndex);
-    }
-
-    function showPrevImage() {
-        if (!currentFilteredIndices.length) return;
-        currentActiveIndex = (currentActiveIndex - 1 + currentFilteredIndices.length) % currentFilteredIndices.length;
-        const targetIndex = currentFilteredIndices[currentActiveIndex];
-        openLightbox(targetIndex);
-    }
-
-    // Attach click and keyboard events to gallery cards
-    galleryItems.forEach(item => {
-        const dataIndex = parseInt(item.getAttribute('data-index'), 10);
-
-        item.addEventListener('click', () => openLightbox(dataIndex));
-
-        // Keyboard Enter or Space key support
-        item.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                openLightbox(dataIndex);
-            }
-        });
-    });
-
-    // Lightbox controls
-    if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
-    if (nextBtn) nextBtn.addEventListener('click', showNextImage);
-    if (prevBtn) prevBtn.addEventListener('click', showPrevImage);
-
-    // Close when clicking modal backdrop outside content
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeLightbox();
-        }
-    });
-
-    // Keyboard navigation (Escape, Left Arrow, Right Arrow)
-    document.addEventListener('keydown', (e) => {
-        if (!modal.classList.contains('active')) return;
-
-        if (e.key === 'Escape') {
-            closeLightbox();
-        } else if (e.key === 'ArrowRight') {
-            showNextImage();
-        } else if (e.key === 'ArrowLeft') {
-            showPrevImage();
-        }
-    });
+  initLightbox();
 }
 
-/**
- * Client-Side Form Validation for Membership Form
- */
+function initLightbox() {
+  const lb = document.getElementById("lightbox");
+  if (!lb) return;
+
+  const closeBtn = document.getElementById("lb-close");
+  const prevBtn = document.getElementById("lb-prev");
+  const nextBtn = document.getElementById("lb-next");
+
+  if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
+  if (prevBtn) prevBtn.addEventListener("click", () => navigateLightbox(-1));
+  if (nextBtn) nextBtn.addEventListener("click", () => navigateLightbox(1));
+
+  lb.addEventListener("click", (e) => {
+    if (e.target === lb) closeLightbox();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (lb.style.display !== "flex") return;
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowLeft") navigateLightbox(-1);
+    if (e.key === "ArrowRight") navigateLightbox(1);
+  });
+}
+
+function openLightbox(index) {
+  const lb = document.getElementById("lightbox");
+  if (!lb || !currentGalleryList[index]) return;
+
+  currentLightboxIdx = index;
+  updateLightboxContent();
+  lb.style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  const lb = document.getElementById("lightbox");
+  if (!lb) return;
+  lb.style.display = "none";
+  document.body.style.overflow = "";
+}
+
+function navigateLightbox(delta) {
+  const total = currentGalleryList.length;
+  if (total === 0) return;
+  currentLightboxIdx = (currentLightboxIdx + delta + total) % total;
+  updateLightboxContent();
+}
+
+function updateLightboxContent() {
+  const item = currentGalleryList[currentLightboxIdx];
+  if (!item) return;
+
+  const img = document.getElementById("lb-img");
+  const title = document.getElementById("lb-title");
+  const cat = document.getElementById("lb-cat");
+  const desc = document.getElementById("lb-desc");
+
+  if (img) { img.src = item.image; img.alt = item.title; }
+  if (title) title.textContent = item.title;
+  if (cat) cat.textContent = item.category;
+  if (desc) desc.textContent = item.desc;
+}
+
+// ==========================================
+// 3. CLIENT-SIDE FORM VALIDATION
+// ==========================================
+
 function initFormValidation() {
-    const form = document.getElementById('membership-form');
-    if (!form) return;
+  const form = document.getElementById("join-form");
+  if (!form) return;
 
-    const fullNameInput = document.getElementById('full_name');
-    const emailInput = document.getElementById('email');
-    const courseInput = document.getElementById('course');
-    const studyYearSelect = document.getElementById('study_year');
-    const preferredActivitySelect = document.getElementById('preferred_activity');
-    const consentCheckbox = document.getElementById('consent');
-    const reasonTextarea = document.getElementById('reason');
+  const alertBox = document.getElementById("form-alert");
+  const alertList = document.getElementById("alert-list");
 
-    const statusAlert = document.getElementById('form-status-alert');
-    const errorsList = document.getElementById('form-errors-list');
-
-    // Email regex validation pattern
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    // Helper: display error for a specific field
-    function setFieldError(field, errorId, isValid) {
-        const errorElement = document.getElementById(errorId);
-        if (!isValid) {
-            field.classList.add('is-invalid');
-            if (errorElement) errorElement.classList.add('visible');
-        } else {
-            field.classList.remove('is-invalid');
-            if (errorElement) errorElement.classList.remove('visible');
-        }
-    }
-
-    // Real-time input listeners to clear errors on change
-    if (fullNameInput) {
-        fullNameInput.addEventListener('input', () => {
-            const valid = fullNameInput.value.trim().length >= 2;
-            setFieldError(fullNameInput, 'error-full_name', valid);
-        });
-    }
-
-    if (emailInput) {
-        emailInput.addEventListener('input', () => {
-            const valid = emailPattern.test(emailInput.value.trim());
-            setFieldError(emailInput, 'error-email', valid);
-        });
-    }
-
-    if (courseInput) {
-        courseInput.addEventListener('input', () => {
-            const valid = courseInput.value.trim().length >= 2;
-            setFieldError(courseInput, 'error-course', valid);
-        });
-    }
-
-    if (studyYearSelect) {
-        studyYearSelect.addEventListener('change', () => {
-            setFieldError(studyYearSelect, 'error-study_year', studyYearSelect.value !== '');
-        });
-    }
-
-    if (preferredActivitySelect) {
-        preferredActivitySelect.addEventListener('change', () => {
-            setFieldError(preferredActivitySelect, 'error-preferred_activity', preferredActivitySelect.value !== '');
-        });
-    }
-
-    if (consentCheckbox) {
-        consentCheckbox.addEventListener('change', () => {
-            setFieldError(consentCheckbox, 'error-consent', consentCheckbox.checked);
-        });
-    }
-
-    // Form submission validation handler
-    form.addEventListener('submit', (event) => {
-        let isFormValid = true;
-        const validationErrors = [];
-
-        // 1. Full Name
-        const nameVal = fullNameInput.value.trim();
-        if (nameVal.length < 2) {
-            setFieldError(fullNameInput, 'error-full_name', false);
-            validationErrors.push('Full name must be at least 2 characters long.');
-            isFormValid = false;
-        } else {
-            setFieldError(fullNameInput, 'error-full_name', true);
-        }
-
-        // 2. Email Address
-        const emailVal = emailInput.value.trim();
-        if (!emailPattern.test(emailVal)) {
-            setFieldError(emailInput, 'error-email', false);
-            validationErrors.push('A valid student email address is required.');
-            isFormValid = false;
-        } else {
-            setFieldError(emailInput, 'error-email', true);
-        }
-
-        // 3. Course / Department
-        const courseVal = courseInput.value.trim();
-        if (courseVal.length < 2) {
-            setFieldError(courseInput, 'error-course', false);
-            validationErrors.push('Course or department cannot be left blank.');
-            isFormValid = false;
-        } else {
-            setFieldError(courseInput, 'error-course', true);
-        }
-
-        // 4. Study Year
-        if (!studyYearSelect.value) {
-            setFieldError(studyYearSelect, 'error-study_year', false);
-            validationErrors.push('Please select your current year of study.');
-            isFormValid = false;
-        } else {
-            setFieldError(studyYearSelect, 'error-study_year', true);
-        }
-
-        // 5. Preferred Activity
-        if (!preferredActivitySelect.value) {
-            setFieldError(preferredActivitySelect, 'error-preferred_activity', false);
-            validationErrors.push('Please select a preferred sport or activity.');
-            isFormValid = false;
-        } else {
-            setFieldError(preferredActivitySelect, 'error-preferred_activity', true);
-        }
-
-        // 6. Reason character limit check
-        if (reasonTextarea && reasonTextarea.value.length > 600) {
-            setFieldError(reasonTextarea, 'error-reason', false);
-            validationErrors.push('Reason for joining must be 600 characters or fewer.');
-            isFormValid = false;
-        } else if (reasonTextarea) {
-            setFieldError(reasonTextarea, 'error-reason', true);
-        }
-
-        // 7. Consent Checkbox
-        if (!consentCheckbox.checked) {
-            setFieldError(consentCheckbox, 'error-consent', false);
-            validationErrors.push('Consent agreement must be checked to submit.');
-            isFormValid = false;
-        } else {
-            setFieldError(consentCheckbox, 'error-consent', true);
-        }
-
-        // Handle validation results
-        if (!isFormValid) {
-            event.preventDefault(); // Stop submission
-
-            // Populate accessible error summary list
-            if (statusAlert && errorsList) {
-                errorsList.innerHTML = '';
-                validationErrors.forEach(msg => {
-                    const li = document.createElement('li');
-                    li.textContent = msg;
-                    errorsList.appendChild(li);
-                });
-                statusAlert.style.display = 'block';
-                statusAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        } else {
-            if (statusAlert) statusAlert.style.display = 'none';
-            // Allow native form POST to process.php
-        }
+  // Real-time input clearing
+  form.querySelectorAll("input, select, textarea").forEach(field => {
+    field.addEventListener("input", () => {
+      field.classList.remove("invalid");
+      const err = document.getElementById(`err-${field.id || field.name}`);
+      if (err) err.classList.remove("show");
     });
+  });
+
+  form.addEventListener("submit", (e) => {
+    const errors = [];
+
+    // Helper validation functions
+    function validateField(id, condition, msg) {
+      const el = document.getElementById(id);
+      const errEl = document.getElementById(`err-${id}`);
+      if (!el) return;
+
+      if (!condition(el.value.trim())) {
+        el.classList.add("invalid");
+        if (errEl) errEl.classList.add("show");
+        errors.push(msg);
+      } else {
+        el.classList.remove("invalid");
+        if (errEl) errEl.classList.remove("show");
+      }
+    }
+
+    // 1. Full name: at least 2 characters, letters & spaces
+    validateField("full_name", v => v.length >= 2, "Full Name must contain at least 2 characters.");
+
+    // 2. Email: basic email pattern
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    validateField("email", v => emailPattern.test(v), "Please enter a valid email address.");
+
+    // 3. Course: required
+    validateField("course", v => v.length > 0, "Course / Department is required.");
+
+    // 4. Study year: must select
+    validateField("study_year", v => v !== "", "Please select your year of study.");
+
+    // 5. Preferred activity: must select
+    validateField("preferred_activity", v => v !== "", "Please select your preferred sport.");
+
+    // 6. Reason/message length check
+    const reasonEl = document.getElementById("reason");
+    if (reasonEl && reasonEl.value.trim().length > 600) {
+      reasonEl.classList.add("invalid");
+      const errReason = document.getElementById("err-reason");
+      if (errReason) errReason.classList.add("show");
+      errors.push("Message cannot exceed 600 characters.");
+    }
+
+    // 7. Consent checkbox
+    const consent = document.getElementById("consent");
+    const errConsent = document.getElementById("err-consent");
+    if (consent && !consent.checked) {
+      if (errConsent) errConsent.classList.add("show");
+      errors.push("You must agree to the communications consent policy.");
+    } else if (errConsent) {
+      errConsent.classList.remove("show");
+    }
+
+    // If any errors exist, block submission and show summary
+    if (errors.length > 0) {
+      e.preventDefault();
+      if (alertBox && alertList) {
+        alertList.innerHTML = errors.map(err => `<li>${err}</li>`).join("");
+        alertBox.style.display = "block";
+        alertBox.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    } else {
+      if (alertBox) alertBox.style.display = "none";
+      // Let standard POST proceed to process.php!
+    }
+  });
+}
+
+/**
+ * Handle query parameters on join.html (e.g. ?sport=Football)
+ */
+function checkUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  const sport = params.get("sport");
+  const purpose = params.get("purpose");
+
+  if (sport) {
+    const actSelect = document.getElementById("preferred_activity");
+    if (actSelect) {
+      for (let opt of actSelect.options) {
+        if (opt.value.toLowerCase() === sport.toLowerCase()) {
+          opt.selected = true;
+          break;
+        }
+      }
+    }
+  }
+
+  if (purpose) {
+    const purpSelect = document.getElementById("form_purpose");
+    if (purpSelect) {
+      if (purpose === "event") purpSelect.value = "Event enquiry";
+    }
+  }
 }

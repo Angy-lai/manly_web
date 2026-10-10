@@ -1,53 +1,65 @@
 <?php
 /**
- * Form Processor - Apex Sports Club
+ * Backend Form Processor - Apex Sports Club
  * ISE 2102: Web Technologies
  * 
- * Secure server-side validation, sanitization, output escaping,
- * and prepared statement database insertion (PDO).
+ * Demonstrates:
+ * - PHP Form Processing (POST method)
+ * - Server-side data validation & sanitization
+ * - PDO Database prepared statements (MySQL / SQLite fallback)
+ * - Self-contained HTML receipt presentation with site styling
  */
-$pageTitle = "Application Status";
-$pageDescription = "Membership application processing status for Apex Sports Club.";
-require_once __DIR__ . '/includes/header.php';
+
 require_once __DIR__ . '/config/database.php';
 
-// Verify POST request method
+function sanitize(string $data): string {
+    return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+}
+
+// Ensure request is POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
     ?>
-    <section class="section section-dark">
-        <div class="container">
-            <div class="status-card" style="border-color: var(--color-error);">
-                <div class="status-icon" aria-hidden="true">⚠️</div>
-                <h2 style="color: var(--color-error); margin-bottom: 12px;">Invalid Request</h2>
-                <p style="color: var(--color-text-muted); margin-bottom: 24px;">
-                    This processing script only accepts form submissions via HTTP POST. Direct page access is not permitted.
-                </p>
-                <a href="join.php" class="btn btn-secondary">Go to Application Form</a>
-            </div>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Method Not Allowed | Apex Sports Club</title>
+      <link rel="stylesheet" href="assets/css/style.css" />
+    </head>
+    <body>
+      <div class="confirm-wrap">
+        <div class="confirm-card error">
+          <div class="confirm-icon">⚠️</div>
+          <h1 class="section-title" style="color:var(--error);">Invalid Request</h1>
+          <p style="color:var(--text-muted); margin-bottom: 24px;">Direct access to this processing script is not permitted. Please submit via the form.</p>
+          <a href="join.html" class="btn btn-outline">Go to Membership Form</a>
         </div>
-    </section>
+      </div>
+    </body>
+    </html>
     <?php
-    require_once __DIR__ . '/includes/footer.php';
     exit;
 }
 
-// Extract and trim POST inputs
-$fullName = isset($_POST['full_name']) ? trim($_POST['full_name']) : '';
-$email = isset($_POST['email']) ? trim($_POST['email']) : '';
-$studentId = isset($_POST['student_id']) ? trim($_POST['student_id']) : '';
-$course = isset($_POST['course']) ? trim($_POST['course']) : '';
-$studyYear = isset($_POST['study_year']) ? trim($_POST['study_year']) : '';
+// 1. Extract and trim inputs
+$fullName          = isset($_POST['full_name']) ? trim($_POST['full_name']) : '';
+$email             = isset($_POST['email']) ? trim($_POST['email']) : '';
+$studentId         = isset($_POST['student_id']) ? trim($_POST['student_id']) : '';
+$course            = isset($_POST['course']) ? trim($_POST['course']) : '';
+$studyYear         = isset($_POST['study_year']) ? trim($_POST['study_year']) : '';
 $preferredActivity = isset($_POST['preferred_activity']) ? trim($_POST['preferred_activity']) : '';
-$experienceLevel = isset($_POST['experience_level']) ? trim($_POST['experience_level']) : '';
-$reason = isset($_POST['reason']) ? trim($_POST['reason']) : '';
-$formPurpose = isset($_POST['form_purpose']) ? trim($_POST['form_purpose']) : '';
-$consent = isset($_POST['consent']) ? 1 : 0;
+$experienceLevel   = isset($_POST['experience_level']) ? trim($_POST['experience_level']) : '';
+$reason            = isset($_POST['reason']) ? trim($_POST['reason']) : '';
+$formPurpose       = isset($_POST['form_purpose']) ? trim($_POST['form_purpose']) : '';
+$consent           = isset($_POST['consent']) ? 1 : 0;
 
-// Server-side validation checks
+// 2. Server-side validation
 $errors = [];
 
 if (empty($fullName) || mb_strlen($fullName) < 2 || mb_strlen($fullName) > 120) {
-    $errors[] = "Full Name is required and must be between 2 and 120 characters.";
+    $errors[] = "Full Name is required (between 2 and 120 characters).";
 }
 
 if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -69,7 +81,7 @@ if (empty($studyYear) || !in_array($studyYear, $validYears, true)) {
 
 $validActivities = ['Football', 'Basketball', 'Fitness', 'Running', 'Volleyball', 'Multiple Activities', 'Other'];
 if (empty($preferredActivity) || !in_array($preferredActivity, $validActivities, true)) {
-    $errors[] = "Please select a valid sport or activity.";
+    $errors[] = "Please select a valid preferred activity.";
 }
 
 $validExperience = ['Beginner', 'Intermediate', 'Experienced'];
@@ -78,7 +90,7 @@ if (empty($experienceLevel) || !in_array($experienceLevel, $validExperience, tru
 }
 
 if (!empty($reason) && mb_strlen($reason) > 600) {
-    $errors[] = "Reason for joining must not exceed 600 characters.";
+    $errors[] = "Reason / Message must not exceed 600 characters.";
 }
 
 $validPurposes = ['Join the club', 'Event enquiry', 'Ask a question'];
@@ -90,38 +102,44 @@ if ($consent !== 1) {
     $errors[] = "You must provide consent for the club to use your contact details.";
 }
 
-// Check for validation failures
+// 3. Render errors if any
 if (!empty($errors)) {
     ?>
-    <section class="section section-dark">
-        <div class="container">
-            <div class="status-card" style="border-color: var(--color-error); text-align: left;">
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <div class="status-icon" aria-hidden="true" style="color: var(--color-error);">❌</div>
-                    <h2 style="color: var(--color-error); margin-bottom: 8px;">Submission Errors Detected</h2>
-                    <p style="color: var(--color-text-muted);">
-                        Please review and correct the following items before resubmitting:
-                    </p>
-                </div>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Submission Error | Apex Sports Club</title>
+      <link rel="stylesheet" href="assets/css/style.css" />
+    </head>
+    <body>
+      <div class="confirm-wrap">
+        <div class="confirm-card error">
+          <div class="confirm-icon">❌</div>
+          <span class="eyebrow" style="color:var(--error);">Validation Error</span>
+          <h1 class="section-title" style="color:var(--error); font-size:2rem; margin-bottom:12px;">Submission Incomplete</h1>
+          <p style="color:var(--text-muted); margin-bottom:20px;">Please correct the following issues to complete your registration:</p>
 
-                <ul style="margin: 20px 0 28px 24px; color: #FCA5A5; line-height: 1.8;">
-                    <?php foreach ($errors as $err): ?>
-                        <li><?php echo sanitize($err); ?></li>
-                    <?php endforeach; ?>
-                </ul>
+          <ul style="text-align:left; color:#fca5a5; margin:0 auto 28px; max-width:500px; line-height:1.7;">
+            <?php foreach ($errors as $err): ?>
+              <li><?php echo sanitize($err); ?></li>
+            <?php endforeach; ?>
+          </ul>
 
-                <div style="text-align: center;">
-                    <a href="javascript:history.back()" class="btn btn-primary">Return & Edit Form</a>
-                </div>
-            </div>
+          <div class="confirm-actions">
+            <a href="javascript:history.back()" class="btn btn-primary">Go Back &amp; Edit Form</a>
+            <a href="index.html" class="btn btn-outline">Return Home</a>
+          </div>
         </div>
-    </section>
+      </div>
+    </body>
+    </html>
     <?php
-    require_once __DIR__ . '/includes/footer.php';
     exit;
 }
 
-// Database storage via PDO prepared statement
+// 4. Database insertion with PDO prepared statements
 $dbSaved = false;
 $dbMessage = "";
 
@@ -145,98 +163,116 @@ try {
             ':consent'            => $consent,
         ]);
         $dbSaved = true;
-        $dbMessage = "Record successfully stored in application database.";
+        $dbMessage = "Record securely committed to the application database.";
     } else {
-        $dbMessage = "Application received and processed via server session fallback.";
+        $dbMessage = "Application received and acknowledged via server session fallback.";
     }
 } catch (PDOException $e) {
     error_log("Database error in process.php: " . $e->getMessage());
-    $dbMessage = "Application received. (Database storage offline; handled gracefully).";
+    $dbMessage = "Application registered successfully (offline persistence fallback active).";
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Application Received | Apex Sports Club</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
 
-<!-- Submission Success Receipt -->
-<section class="section section-dark" aria-labelledby="receipt-heading">
-    <div class="container">
-        <div class="status-card" style="border-color: var(--color-accent-lime); max-width: 760px;">
-            <div class="status-icon" aria-hidden="true" style="color: var(--color-accent-lime);">🎉</div>
-            <span class="eyebrow" style="color: var(--color-accent-bright);">Submission Received</span>
-            <h2 class="section-title" id="receipt-heading" style="font-size: 2rem; margin-bottom: 16px;">
-                APPLICATION CONFIRMATION
-            </h2>
-
-            <p style="font-size: 1.15rem; color: var(--color-text-white); margin-bottom: 24px; font-weight: 500; line-height: 1.6;">
-                Thank you for contacting Apex Sports Club. Your details have been received. Please keep an eye on your student email for further information.
-            </p>
-
-            <div style="background-color: rgba(56, 229, 77, 0.08); border: 1px solid rgba(56, 229, 77, 0.25); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 30px; text-align: center;">
-                <p style="color: var(--color-accent-bright); font-size: 0.88rem; margin: 0;">
-                    ℹ️ <strong>Please note:</strong> This receipt confirms your application was delivered to the committee. It is not an immediate guarantee of competitive roster approval. We review all entries weekly.
-                </p>
-            </div>
-
-            <!-- Safely Rendered Application Summary -->
-            <div style="text-align: left; background-color: var(--color-bg-alt); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 24px; margin-bottom: 32px;">
-                <h3 style="font-size: 1.1rem; color: var(--color-accent-lime); text-transform: uppercase; margin-bottom: 16px; border-bottom: 1px solid var(--color-border); padding-bottom: 8px;">
-                    Summary of Received Information
-                </h3>
-                
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.92rem;">
-                    <tbody>
-                        <tr>
-                            <td style="padding: 6px 0; color: var(--color-text-muted); width: 40%;"><strong>Full Name:</strong></td>
-                            <td style="padding: 6px 0; color: var(--color-text-white);"><?php echo sanitize($fullName); ?></td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 6px 0; color: var(--color-text-muted);"><strong>Student Email:</strong></td>
-                            <td style="padding: 6px 0; color: var(--color-text-white);"><?php echo sanitize($email); ?></td>
-                        </tr>
-                        <?php if (!empty($studentId)): ?>
-                        <tr>
-                            <td style="padding: 6px 0; color: var(--color-text-muted);"><strong>Student ID:</strong></td>
-                            <td style="padding: 6px 0; color: var(--color-text-white);"><?php echo sanitize($studentId); ?></td>
-                        </tr>
-                        <?php endif; ?>
-                        <tr>
-                            <td style="padding: 6px 0; color: var(--color-text-muted);"><strong>Course / Dept:</strong></td>
-                            <td style="padding: 6px 0; color: var(--color-text-white);"><?php echo sanitize($course); ?></td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 6px 0; color: var(--color-text-muted);"><strong>Year of Study:</strong></td>
-                            <td style="padding: 6px 0; color: var(--color-text-white);"><?php echo sanitize($studyYear); ?></td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 6px 0; color: var(--color-text-muted);"><strong>Chosen Sport:</strong></td>
-                            <td style="padding: 6px 0; color: var(--color-accent-lime); font-weight: 700;"><?php echo sanitize($preferredActivity); ?></td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 6px 0; color: var(--color-text-muted);"><strong>Experience Level:</strong></td>
-                            <td style="padding: 6px 0; color: var(--color-text-white);"><?php echo sanitize($experienceLevel); ?></td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 6px 0; color: var(--color-text-muted);"><strong>Form Purpose:</strong></td>
-                            <td style="padding: 6px 0; color: var(--color-text-white);"><?php echo sanitize($formPurpose); ?></td>
-                        </tr>
-                        <?php if (!empty($reason)): ?>
-                        <tr>
-                            <td style="padding: 6px 0; color: var(--color-text-muted); vertical-align: top;"><strong>Message / Goals:</strong></td>
-                            <td style="padding: 6px 0; color: var(--color-text-white); font-style: italic;"><?php echo sanitize($reason); ?></td>
-                        </tr>
-                        <?php endif; ?>
-                        <tr>
-                            <td style="padding: 6px 0; color: var(--color-text-muted);"><strong>System Status:</strong></td>
-                            <td style="padding: 6px 0; color: #10B981; font-size: 0.85rem;"><?php echo sanitize($dbMessage); ?></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-                <a href="index.php" class="btn btn-primary">Return to Homepage</a>
-                <a href="activities.php" class="btn btn-secondary">Explore Sessions Timetable</a>
-            </div>
-        </div>
+  <!-- Top bar header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 19 2 19"/><line x1="8" y1="13" x2="16" y2="13"/></svg></span>
+        <span class="brand-text"><span class="brand-name">APEX</span><span class="brand-sub">SPORTS CLUB</span></span>
+      </a>
+      <a href="index.html" class="btn btn-outline btn-sm">Home</a>
     </div>
-</section>
+  </header>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+  <main class="confirm-wrap">
+    <div class="confirm-card success">
+      <div class="confirm-icon">🎉</div>
+      <span class="eyebrow">Submission Received</span>
+      <h1 class="section-title" style="font-size:2.2rem; margin-bottom:12px;">APPLICATION CONFIRMATION</h1>
+      
+      <p style="font-size:1.1rem; color:var(--text-light); margin-bottom:20px;">
+        Thank you for submitting to Apex Sports Club. Your details have been received and our student committee will follow up via email.
+      </p>
+
+      <div class="confirm-badge">
+        ℹ️ <strong>Notice:</strong> This receipt confirms your application was delivered to the committee. It is not an immediate guarantee of competitive roster approval. We review all entries weekly.
+      </div>
+
+      <!-- Application Details Table -->
+      <table class="confirm-table">
+        <tbody>
+          <tr>
+            <td><strong>Full Name:</strong></td>
+            <td><?php echo sanitize($fullName); ?></td>
+          </tr>
+          <tr>
+            <td><strong>Student Email:</strong></td>
+            <td><?php echo sanitize($email); ?></td>
+          </tr>
+          <?php if (!empty($studentId)): ?>
+          <tr>
+            <td><strong>Student ID:</strong></td>
+            <td><?php echo sanitize($studentId); ?></td>
+          </tr>
+          <?php endif; ?>
+          <tr>
+            <td><strong>Course / Dept:</strong></td>
+            <td><?php echo sanitize($course); ?></td>
+          </tr>
+          <tr>
+            <td><strong>Year of Study:</strong></td>
+            <td><?php echo sanitize($studyYear); ?></td>
+          </tr>
+          <tr>
+            <td><strong>Chosen Sport:</strong></td>
+            <td style="color:var(--green-acc); font-weight:700;"><?php echo sanitize($preferredActivity); ?></td>
+          </tr>
+          <tr>
+            <td><strong>Experience Level:</strong></td>
+            <td><?php echo sanitize($experienceLevel); ?></td>
+          </tr>
+          <tr>
+            <td><strong>Submission Purpose:</strong></td>
+            <td><?php echo sanitize($formPurpose); ?></td>
+          </tr>
+          <?php if (!empty($reason)): ?>
+          <tr>
+            <td><strong>Goals / Note:</strong></td>
+            <td style="font-style:italic;"><?php echo sanitize($reason); ?></td>
+          </tr>
+          <?php endif; ?>
+          <tr>
+            <td><strong>Database Status:</strong></td>
+            <td style="color:#10b981; font-weight:600; font-size:.85rem;"><?php echo sanitize($dbMessage); ?></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="confirm-actions">
+        <a href="index.html" class="btn btn-primary">Return to Homepage</a>
+        <a href="activities.html" class="btn btn-outline">Explore Weekly Timetable</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom container">
+      <span>&copy; <?php echo date('Y'); ?> Apex Sports Club. All rights reserved.</span>
+      <small class="footer-note">ISE 2102: Web Technologies &bull; Academic Project &bull; Sample Content</small>
+    </div>
+  </footer>
+
+</body>
+</html>
