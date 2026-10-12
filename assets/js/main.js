@@ -20,8 +20,7 @@ const SPORTS_DATA = [
     name: "Football",
     tagline: "Play together. Compete together.",
     description: "Weekly friendly matches, tactical training, and campus league tournaments for all skill levels.",
-    image: "assets/sports.jpeg",
-    icon: "⚽",
+    image: "assets/football.jpg",
     badge: "Most Popular",
     category: "Team Sports"
   },
@@ -30,8 +29,7 @@ const SPORTS_DATA = [
     name: "Basketball",
     tagline: "Find your rhythm on the court.",
     description: "Fast-paced pick-up games, shooting drills, and 3v3 weekend showdowns on indoor and outdoor courts.",
-    image: "assets/pic_of_balls.jpeg",
-    icon: "🏀",
+    image: "assets/basketball.jpg",
     badge: "Fast Paced",
     category: "Court Sports"
   },
@@ -41,7 +39,6 @@ const SPORTS_DATA = [
     tagline: "Build strength one session at a time.",
     description: "Structured conditioning circuits, functional strength workshops, and high-energy group fitness classes.",
     image: "assets/girl_holding_ropes.jpeg",
-    icon: "🏋️",
     badge: "All Levels",
     category: "Conditioning"
   },
@@ -51,7 +48,6 @@ const SPORTS_DATA = [
     tagline: "Teamwork above the net.",
     description: "Spike, set, and serve in mixed recreational games and faculty challenge matches on our sand and indoor courts.",
     image: "assets/volley.jpeg",
-    icon: "🏐",
     badge: "Social & Fun",
     category: "Court Sports"
   },
@@ -61,7 +57,6 @@ const SPORTS_DATA = [
     tagline: "Set a goal. Find your pace.",
     description: "Weekly sunrise distance runs, interval track training, 5K campus challenges, and sprint technique sessions.",
     image: "assets/sports.jpeg",
-    icon: "🏃",
     badge: "Cardio & Stamina",
     category: "Endurance"
   },
@@ -71,7 +66,6 @@ const SPORTS_DATA = [
     tagline: "Move, connect and unwind.",
     description: "Casual multi-sport tournaments, sports trivia, outdoor hikes, and interfaculty fun days.",
     image: "assets/pic_of_balls.jpeg",
-    icon: "🎉",
     badge: "Community",
     category: "Social"
   }
@@ -82,9 +76,9 @@ const EVENTS_DATA = [
     id: 1,
     title: "Community Football Match",
     sport: "Football",
-    date: "Saturday, 24 Oct",
+    date: "Saturday, 24 Nov",
     time: "10:00 AM - 12:30 PM",
-    venue: "Main Campus Turf Pitch 1",
+    venue: "Campus Football Pitch ",
     level: "All Abilities Welcome",
     description: "Bring your boots for an open 7v7 friendly match. Great way to meet members and warm up for the semester league."
   },
@@ -94,7 +88,7 @@ const EVENTS_DATA = [
     sport: "Basketball",
     date: "Wednesday, 28 Oct",
     time: "4:30 PM - 7:00 PM",
-    venue: "Indoor Sports Complex (Court B)",
+    venue: "Campus Basketball Court",
     level: "Intermediate & Advanced",
     description: "Fast half-court matches with running clocks. Enter as a squad of three or join the free-agent pool on arrival."
   },
@@ -104,7 +98,7 @@ const EVENTS_DATA = [
     sport: "Running",
     date: "Friday, 30 Oct",
     time: "5:30 PM - 6:45 PM",
-    venue: "Student Plaza (Start / Finish)",
+    venue: "Campus Main Gate (Start / Finish)",
     level: "All Paces (Walkers to Sprinters)",
     description: "A scenic loop around campus perimeter paths led by student pacers. Free hydration and fruit at the finish line."
   },
@@ -114,7 +108,7 @@ const EVENTS_DATA = [
     sport: "Fitness",
     date: "Monday, 2 Nov",
     time: "5:00 PM - 6:15 PM",
-    venue: "Fitness Suite / Multi-Gym",
+    venue: "H2 Gym",
     level: "Beginner Friendly",
     description: "Learn safe lifting techniques, kettlebell flows, and bodyweight core routines guided by peer fitness coaches."
   },
@@ -124,7 +118,7 @@ const EVENTS_DATA = [
     sport: "Volleyball",
     date: "Thursday, 5 Nov",
     time: "4:00 PM - 6:00 PM",
-    venue: "Outdoor Sand Courts",
+    venue: "Volleyball Court ",
     level: "Open to Everyone",
     description: "Sharpen your jump serves, setting consistency, and defensive positioning with fun structured scrimmages."
   }
@@ -132,31 +126,27 @@ const EVENTS_DATA = [
 
 const COMMITTEE_DATA = [
   {
-    name: "Tariq Mensah",
+    name: "Gary Munamba",
     role: "President",
-    dept: "Faculty of Engineering",
-    icon: "👑",
+    dept: "Software Engineering",
     bio: "Passionate about building community through grassroots university sport."
   },
   {
-    name: "Elena Rostova",
-    role: "Vice President",
+    name: "Craig Mundoza",
+    role: "Pharmacy",
     dept: "Faculty of Health Sciences",
-    icon: "⚡",
     bio: "Advocating for health equity, female participation, and wellness habits on campus."
   },
   {
-    name: "Marcus Vance",
+    name: "Valerie Ngudu",
     role: "Sports Coordinator",
-    dept: "School of Business",
-    icon: "📋",
+    dept: "Financial Engineering",
     bio: "Organises weekly fixtures, officiating, pitch reservations, and tournament brackets."
   },
   {
-    name: "Amina Al-Mansoor",
+    name: "Tazvi Mhaka",
     role: "Community & Media Lead",
-    dept: "Department of Computer Science",
-    icon: "📣",
+    dept: "Chemical Engineering",
     bio: "Manages social channels, club branding, member communications, and student events."
   }
 ];
@@ -164,44 +154,44 @@ const COMMITTEE_DATA = [
 const GALLERY_DATA = [
   {
     id: 1,
-    title: "Championship Final Kick-Off",
+    title: "Football Match",
     category: "Football",
-    desc: "Intense campus cup finals under floodlights at the main stadium.",
-    image: "assets/sports.jpeg"
+    desc: "A football match on the pitch.",
+    image: "assets/football.jpg"
   },
   {
     id: 2,
-    title: "Court Warm-Up & Ball Drills",
+    title: "Basketball Game",
     category: "Basketball",
-    desc: "Pre-match shootarounds and ball handling routines before the faculty league game.",
-    image: "assets/pic_of_balls.jpeg"
+    desc: "Players competing during a basketball game.",
+    image: "assets/basketball.jpg"
   },
   {
     id: 3,
     title: "Battle Ropes Conditioning",
     category: "Fitness",
-    desc: "High intensity interval strength circuit testing endurance and power.",
+    desc: "A strength and conditioning workout with battle ropes.",
     image: "assets/girl_holding_ropes.jpeg"
   },
   {
     id: 4,
-    title: "Match Point at the Net",
+    title: "Beach Volleyball",
     category: "Volleyball",
-    desc: "Decisive spike block during the mixed interfaculty volleyball tournament.",
+    desc: "Volleyball players competing at sunset.",
     image: "assets/volley.jpeg"
   },
   {
     id: 5,
-    title: "Sunset Pace Group 5K",
-    category: "Running",
-    desc: "Members winding down the week with an energetic campus evening jog.",
+    title: "Sports in Action",
+    category: "Sports",
+    desc: "A collection of activities from across the sporting community.",
     image: "assets/sports.jpeg"
   },
   {
     id: 6,
-    title: "Multi-Sport Equipment Pack",
-    category: "Social",
-    desc: "Everything ready for Saturday morning open student recreation day.",
+    title: "Sports Equipment",
+    category: "Sports",
+    desc: "Equipment for a range of sports and activities.",
     image: "assets/pic_of_balls.jpeg"
   }
 ];
@@ -268,13 +258,12 @@ function renderSportsGrids() {
       </div>
       <div class="sport-body">
         <div class="sport-head">
-          <span class="sport-icon">${sport.icon}</span>
           <h3>${sport.name}</h3>
         </div>
         <div class="sport-tagline">${sport.tagline}</div>
         <p>${sport.description}</p>
         <a href="join.html?sport=${encodeURIComponent(sport.name)}" class="sport-link">
-          Join ${sport.name} &rarr;
+          Join ${sport.name}
         </a>
       </div>
     </article>
@@ -349,13 +338,12 @@ function renderEvents() {
       <article class="event-card">
         <div class="event-top">
           <span class="event-badge">${ev.sport}</span>
-          <span class="event-sample">Sample Date</span>
         </div>
         <h3>${ev.title}</h3>
         <ul class="event-meta">
-          <li><span>📅</span> <strong>${ev.date}</strong> &bull; ${ev.time}</li>
-          <li><span>📍</span> ${ev.venue}</li>
-          <li><span>🎯</span> ${ev.level}</li>
+          <li><strong>Date:</strong><span>${ev.date} &bull; ${ev.time}</span></li>
+          <li><strong>Location:</strong><span>${ev.venue}</span></li>
+          <li><strong>Level:</strong><span>${ev.level}</span></li>
         </ul>
         <p class="event-desc">${ev.description}</p>
         <a href="join.html?purpose=event&sport=${encodeURIComponent(ev.sport)}" class="btn btn-outline btn-sm">
@@ -375,7 +363,7 @@ function renderCommittee() {
 
   grid.innerHTML = COMMITTEE_DATA.map(member => `
     <article class="committee-card">
-      <div class="committee-avatar" aria-hidden="true">${member.icon}</div>
+      <div class="committee-avatar" aria-hidden="true">${member.name.split(/\s+/).map(part => part.charAt(0)).join("")}</div>
       <div class="committee-role">${member.role}</div>
       <h3>${member.name}</h3>
       <p style="color:var(--green-soft); font-weight:600; margin-bottom:6px;">${member.dept}</p>
